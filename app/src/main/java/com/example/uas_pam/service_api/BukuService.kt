@@ -28,7 +28,7 @@ interface BukuService {
     @PUT("editbuku.php/{id_buku}")
     suspend fun editBuku(@Query("id_buku") idBuku: String, @Body buku: Buku)
 
-    @DELETE("hapusbuku.php/{id_buku}")
+    @DELETE("deletebuku.php/{id_buku}")
     suspend fun deleteBuku(@Query("id_buku") idBuku: String)
 
 }
