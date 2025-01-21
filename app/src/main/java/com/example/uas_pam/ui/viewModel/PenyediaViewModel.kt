@@ -9,7 +9,9 @@ import com.example.uas_pam.ui.viewModel.Buku.InsertBukuViewModel
 
 object PenyediaViewModel{
     val Factory = viewModelFactory {
-
+        initializer {
+            InsertBukuViewModel(perpusApp().container.bukuRepository)
+        }
     }
 }
 
