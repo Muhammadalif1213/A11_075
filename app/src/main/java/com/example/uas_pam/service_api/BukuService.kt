@@ -1,6 +1,7 @@
 package com.example.uas_pam.service_api
 
 import com.example.uas_pam.model.Buku
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -29,6 +30,6 @@ interface BukuService {
     suspend fun editBuku(@Query("id_buku") idBuku: String, @Body buku: Buku)
 
     @DELETE("deletebuku.php/{id_buku}")
-    suspend fun deleteBuku(@Query("id_buku") idBuku: String)
+    suspend fun deleteBuku(@Query("id_buku") idBuku: String): Response<Void>
 
 }
