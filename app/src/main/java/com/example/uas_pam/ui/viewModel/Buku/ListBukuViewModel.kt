@@ -39,5 +39,16 @@ class ListBukuViewModel(
             }
         }
     }
+    fun deleteBuku(id_buku: Int){
+        viewModelScope.launch {
+            try {
+                bukuRepo.deleteBuku(id_buku)
+            }catch (e: Exception){
+                ListBukuUiState.Error
+            }catch (e: HttpException) {
+                ListBukuUiState.Error
+            }
+        }
+    }
 
 }
