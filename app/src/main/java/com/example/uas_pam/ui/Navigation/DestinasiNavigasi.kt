@@ -10,3 +10,7 @@ object DestinasiEntryBuku: DestinasiNavigasi {
     override val titleRes= "Entry Buku"
 }
 
+object DestinasiListBuku: DestinasiNavigasi {
+    override val route = "item_list"
+    override val titleRes = "List Buku"
+}

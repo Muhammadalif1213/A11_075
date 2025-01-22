@@ -6,11 +6,15 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.uas_pam.PerpusApplication
 import com.example.uas_pam.ui.viewModel.Buku.InsertBukuViewModel
+import com.example.uas_pam.ui.viewModel.Buku.ListBukuViewModel
 
 object PenyediaViewModel{
     val Factory = viewModelFactory {
         initializer {
             InsertBukuViewModel(perpusApp().container.bukuRepository)
+        }
+        initializer {
+            ListBukuViewModel(perpusApp().container.bukuRepository)
         }
     }
 }

@@ -7,7 +7,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.uas_pam.ui.View.Buku.EntryBukuScreen
+import com.example.uas_pam.ui.View.Buku.HomeScreen
+import com.example.uas_pam.ui.View.HomeAppView
 
 @Composable
 fun PengelolaHalaman(
@@ -23,6 +26,13 @@ fun PengelolaHalaman(
         composable(DestinasiEntryBuku.route) {
             EntryBukuScreen(
                 navigateBack = { navController.popBackStack() }
+            )
+        }
+        composable(DestinasiListBuku.route) {
+            HomeScreen(
+                navigateToItemEntry = { navController.navigate(DestinasiEntryBuku.route) },
+                onDetailClick = {
+                }
             )
         }
     }
