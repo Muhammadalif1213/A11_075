@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Buku (
     @SerialName("id_buku")
-    val idBuku: String,
+    val idBuku: Int,
 
     val judul: String,
     val penulis: String,
