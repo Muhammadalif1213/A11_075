@@ -19,3 +19,8 @@ object DestinasiListBuku: DestinasiNavigasi {
     override val route = "item_list"
     override val titleRes = "List Buku"
 }
+
+object DestinasiListAnggota: DestinasiNavigasi {
+    override val route = "anggota_list"
+    override val titleRes= "List Anggota"
+}
