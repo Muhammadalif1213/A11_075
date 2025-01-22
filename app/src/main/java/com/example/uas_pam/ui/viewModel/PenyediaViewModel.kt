@@ -14,6 +14,9 @@ object PenyediaViewModel{
             InsertBukuViewModel(perpusApp().container.bukuRepository)
         }
         initializer {
+            HomeViewModel()
+        }
+        initializer {
             ListBukuViewModel(perpusApp().container.bukuRepository)
         }
     }

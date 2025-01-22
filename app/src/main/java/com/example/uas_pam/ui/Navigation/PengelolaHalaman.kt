@@ -23,6 +23,16 @@ fun PengelolaHalaman(
         modifier = Modifier
     )
     {
+        composable(
+            route = DestinasiHome.route
+        ) { HomeAppView(
+            modifier = modifier,
+            onNavigateAddSup ={ navController.navigate(DestinasiEntryBuku.route) },
+            onNavigateMenuBuku = {navController.navigate(DestinasiListBuku.route)},
+            onNavigateAddBrg = {},
+            onNavigateListBrg = {}
+        )
+        }
         composable(DestinasiEntryBuku.route) {
             EntryBukuScreen(
                 navigateBack = { navController.popBackStack() }

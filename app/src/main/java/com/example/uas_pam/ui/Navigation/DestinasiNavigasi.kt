@@ -5,6 +5,11 @@ interface DestinasiNavigasi {
     val titleRes: String
 }
 
+object DestinasiHome: DestinasiNavigasi {
+    override val route = "home"
+    override val titleRes = "Home"
+}
+
 object DestinasiEntryBuku: DestinasiNavigasi {
     override val route = "item_entry"
     override val titleRes= "Entry Buku"
