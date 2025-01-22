@@ -21,15 +21,15 @@ interface BukuService {
     suspend fun getBuku(): List<Buku>
 
     @GET("baca1buku.php")
-    suspend fun getBukuById(@Query("id_buku") idBuku: String): Buku
+    suspend fun getBukuById(@Query("id_buku") idBuku: Int): Buku
 
-    @POST("tambahbuku.php")
+    @POST("insertbuku.php")
     suspend fun insertBuku(@Body buku: Buku)
 
     @PUT("editbuku.php/{id_buku}")
-    suspend fun editBuku(@Query("id_buku") idBuku: String, @Body buku: Buku)
+    suspend fun editBuku(@Query("id_buku") idBuku: Int, @Body buku: Buku)
 
     @DELETE("deletebuku.php/{id_buku}")
-    suspend fun deleteBuku(@Query("id_buku") idBuku: String): Response<Void>
+    suspend fun deleteBuku(@Query("id_buku") idBuku: Int): Response<Void>
 
 }
