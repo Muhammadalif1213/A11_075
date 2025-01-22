@@ -1,6 +1,4 @@
-package com.example.uas_pam.ui.viewModel.Anggota
-
-
+package com.example.uas_pam.ui.viewModel.Buku
 
 
 data class InsertBukuUiState(
