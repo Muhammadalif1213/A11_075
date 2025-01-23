@@ -27,6 +27,13 @@ object DestinasiDetailBuku: DestinasiNavigasi {
     val routeWithArgs = "$route/{$IDBUKU}"
 }
 
+object DestinasiUpdateBuku: DestinasiNavigasi {
+    override val route = "item_update"
+    override val titleRes= "Update Buku"
+    const val IDBUKU = "idBuku"
+    val routeWithArgs = "$route/{$IDBUKU}"
+}
+
 
 object DestinasiEntryAnggota: DestinasiNavigasi {
     override val route = "Anggota_entry"

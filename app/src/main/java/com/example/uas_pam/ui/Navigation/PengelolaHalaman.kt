@@ -13,6 +13,7 @@ import com.example.uas_pam.ui.View.Anggota.ListAnggotaScreen
 import com.example.uas_pam.ui.View.Buku.DetailView
 import com.example.uas_pam.ui.View.Buku.EntryBukuScreen
 import com.example.uas_pam.ui.View.Buku.HomeScreen
+import com.example.uas_pam.ui.View.Buku.updateBukuView
 import com.example.uas_pam.ui.View.HomeAppView
 
 @Composable
@@ -76,9 +77,23 @@ fun PengelolaHalaman(
             idBuku?.let { idBuku ->
                 DetailView(
                     navigateBack = { navController.navigateUp() },
-                    onEditClick = {},
-
+                    onEditClick = {navController.navigate("${DestinasiUpdateBuku.route}/$idBuku")},
                     )
+            }
+        }
+        composable(
+            DestinasiUpdateBuku.routeWithArgs,
+            arguments = listOf(
+                navArgument(DestinasiUpdateBuku.IDBUKU) {
+                    type = NavType.IntType
+                }
+            )
+        ){
+            val idBuku = it.arguments?.getInt(DestinasiUpdateBuku.IDBUKU)
+            idBuku.let { idBuku ->
+                updateBukuView(
+                    navigateBack = { navController.navigateUp() }
+                )
             }
         }
     }
