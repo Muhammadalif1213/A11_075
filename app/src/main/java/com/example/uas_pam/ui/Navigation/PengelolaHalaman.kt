@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.uas_pam.ui.View.Anggota.EntryAnggotaScreen
 import com.example.uas_pam.ui.View.Anggota.ListAnggotaScreen
 import com.example.uas_pam.ui.View.Buku.EntryBukuScreen
 import com.example.uas_pam.ui.View.Buku.HomeScreen
@@ -44,9 +45,16 @@ fun PengelolaHalaman(
                 }
             )
         }
+
+        composable(DestinasiEntryAnggota.route) {
+            EntryAnggotaScreen(
+                navigateBack = { navController.popBackStack() }
+            )
+        }
+
         composable(DestinasiListAnggota.route){
             ListAnggotaScreen(
-                navigateToItemEntry = { },
+                navigateToAnggotaEntry = { navController.navigate(DestinasiEntryAnggota.route) },
                 onDetailClick = {
                 }
             )
