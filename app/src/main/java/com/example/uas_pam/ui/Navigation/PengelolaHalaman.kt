@@ -3,11 +3,14 @@ package com.example.uas_pam.ui.Navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.uas_pam.ui.View.Anggota.EntryAnggotaScreen
 import com.example.uas_pam.ui.View.Anggota.ListAnggotaScreen
+import com.example.uas_pam.ui.View.Buku.DetailView
 import com.example.uas_pam.ui.View.Buku.EntryBukuScreen
 import com.example.uas_pam.ui.View.Buku.HomeScreen
 import com.example.uas_pam.ui.View.HomeAppView
@@ -41,7 +44,9 @@ fun PengelolaHalaman(
         composable(DestinasiListBuku.route) {
             HomeScreen(
                 navigateToItemEntry = { navController.navigate(DestinasiEntryBuku.route) },
-                onDetailClick = {
+                onDetailClick = { idBuku ->
+                    val idBuku = idBuku
+                    navController.navigate("${"${DestinasiDetailBuku.route}/$idBuku"}")
                 }
             )
         }
@@ -58,6 +63,23 @@ fun PengelolaHalaman(
                 onDetailClick = {
                 }
             )
+        }
+
+        composable(DestinasiDetailBuku.routeWithArgs,
+            arguments = listOf(
+                navArgument(DestinasiDetailBuku.IDBUKU){
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            val idBuku = it.arguments?.getInt(DestinasiDetailBuku.IDBUKU)
+            idBuku?.let { idBuku ->
+                DetailView(
+                    navigateBack = { navController.navigateUp() },
+                    onEditClick = {},
+
+                    )
+            }
         }
     }
 }
