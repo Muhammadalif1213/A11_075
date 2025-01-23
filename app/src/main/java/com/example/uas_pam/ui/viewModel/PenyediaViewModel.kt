@@ -11,6 +11,7 @@ import com.example.uas_pam.ui.viewModel.Anggota.ListAnggotaViewModel
 import com.example.uas_pam.ui.viewModel.Buku.DetailBukuViewModel
 import com.example.uas_pam.ui.viewModel.Buku.InsertBukuViewModel
 import com.example.uas_pam.ui.viewModel.Buku.ListBukuViewModel
+import com.example.uas_pam.ui.viewModel.Buku.UpdateBukuViewModel
 
 object PenyediaViewModel{
     val Factory = viewModelFactory {
@@ -31,6 +32,12 @@ object PenyediaViewModel{
         }
         initializer {
             DetailBukuViewModel(
+                createSavedStateHandle(),
+                perpusApp().container.bukuRepository
+            )
+        }
+        initializer {
+            UpdateBukuViewModel(
                 createSavedStateHandle(),
                 perpusApp().container.bukuRepository
             )
