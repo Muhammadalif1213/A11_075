@@ -1,6 +1,7 @@
 package com.example.uas_pam.service_api
 
 import com.example.uas_pam.model.Anggota
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -20,14 +21,14 @@ interface AnggotaService {
     @GET("baca1anggota.php")
     suspend fun getAnggotaById(@Query("id_anggota") idAnggota: String): Anggota
 
-    @POST("tambahanggota.php")
-    suspend fun insertAnggota(anggota: Anggota)
+    @POST("insertanggota.php")
+    suspend fun insertAnggota(@Body anggota: Anggota)
 
     @PUT("editanggota.php/{id_anggota}")
-    suspend fun editAnggota(@Query("id_anggota") idAnggota: String, @Body anggota: Anggota)
+    suspend fun editAnggota(@Query("id_anggota") idAnggota: Int, @Body anggota: Anggota)
 
     @DELETE("deleteanggota.php/{id_anggota}")
-    suspend fun deleteAnggota(@Query("id_anggota") idAnggota: String)
+    suspend fun deleteAnggota(@Query("id_anggota") idAnggota: Int): Response<Void>
 
 
 }

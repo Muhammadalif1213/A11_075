@@ -2,6 +2,7 @@ package com.example.uas_pam.repository
 
 import com.example.uas_pam.model.Anggota
 import com.example.uas_pam.service_api.AnggotaService
+import java.io.IOException
 
 interface AnggotaRepository{
     suspend fun getAnggota(): List<Anggota>
@@ -21,7 +22,7 @@ class NetworkAnggotaRepository(
     }
 
     override suspend fun insertAnggota(anggota: Anggota) {
-        TODO("Not yet implemented")
+        anggotaApiService.insertAnggota(anggota)
     }
 
     override suspend fun editAnggota(idAnggota: Int, anggota: Anggota) {
