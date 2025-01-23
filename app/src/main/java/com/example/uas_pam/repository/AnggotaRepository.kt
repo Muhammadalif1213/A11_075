@@ -30,7 +30,20 @@ class NetworkAnggotaRepository(
     }
 
     override suspend fun deleteAnggota(idAnggota: Int) {
-        TODO("Not yet implemented")
+        try {
+            val response = anggotaApiService.deleteAnggota(idAnggota)
+            if (!response.isSuccessful) {
+                throw IOException(
+                    "Failed to delete anggota. HTTP Status Code:" +
+                            "${response.code()} "
+                )
+            } else {
+                response.message()
+                println(response.message())
+            }
+        } catch (e: Exception) {
+            throw e
+        }
     }
 
 }

@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.uas_pam.model.Anggota
 import com.example.uas_pam.repository.AnggotaRepository
-import com.example.uas_pam.ui.viewModel.Buku.ListBukuUiState
+import com.example.uas_pam.ui.viewModel.Anggota.ListAnggotaUiState
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -36,6 +36,17 @@ class ListAnggotaViewModel(
             } catch (e: IOException) {
                 ListAnggotaUiState.Error
             } catch (e: HttpException) {
+                ListAnggotaUiState.Error
+            }
+        }
+    }
+    fun deleteAnggota(id_anggota: Int){
+        viewModelScope.launch {
+            try {
+                anggotaRepo.deleteAnggota(id_anggota)
+            }catch (e: Exception){
+                ListAnggotaUiState.Error
+            }catch (e: HttpException) {
                 ListAnggotaUiState.Error
             }
         }

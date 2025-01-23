@@ -48,7 +48,7 @@ import com.example.uas_pam.ui.viewModel.PenyediaViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListAnggotaScreen(
-    navigateToItemEntry: () -> Unit,
+    navigateToAnggotaEntry: () -> Unit,
     modifier: Modifier = Modifier,
     onDetailClick: (String) -> Unit = {},
     viewModel: ListAnggotaViewModel = viewModel(factory = PenyediaViewModel.Factory)
@@ -69,7 +69,7 @@ fun ListAnggotaScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = navigateToItemEntry,
+                onClick = navigateToAnggotaEntry,
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.padding(18.dp)
             ){
@@ -88,7 +88,7 @@ fun ListAnggotaScreen(
                 .padding(innerPadding),
             onDetailClick = onDetailClick,
             onDeleteClick = {
-                viewModel.getAnggota()
+                viewModel.deleteAnggota(it.idAnggota)
             }
         )
     }
