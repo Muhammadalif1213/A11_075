@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.uas_pam.ui.View.Anggota.DetailAnggotaView
 import com.example.uas_pam.ui.View.Anggota.EntryAnggotaScreen
 import com.example.uas_pam.ui.View.Anggota.ListAnggotaScreen
 import com.example.uas_pam.ui.View.Buku.DetailView
@@ -61,9 +62,26 @@ fun PengelolaHalaman(
         composable(DestinasiListAnggota.route){
             ListAnggotaScreen(
                 navigateToAnggotaEntry = { navController.navigate(DestinasiEntryAnggota.route) },
-                onDetailClick = {
+                onDetailClick = { idAnggota ->
+                    val idAnggota = idAnggota
+                    navController.navigate("${"${DestinasiDetailAnggota.route}/$idAnggota"}")
                 }
             )
+        }
+        composable(DestinasiDetailAnggota.routeWithArgs,
+            arguments = listOf(
+                navArgument(DestinasiDetailAnggota.IDANGGOTA){
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            val idAnggota = it.arguments?.getInt(DestinasiDetailAnggota.IDANGGOTA)
+            idAnggota?.let { idAnggota ->
+                DetailAnggotaView(
+                    navigateBack = { navController.navigateUp() },
+                    onEditClick = {},
+                )
+            }
         }
 
         composable(DestinasiDetailBuku.routeWithArgs,

@@ -44,3 +44,10 @@ object DestinasiListAnggota: DestinasiNavigasi {
     override val route = "anggota_list"
     override val titleRes= "List Anggota"
 }
+
+object DestinasiDetailAnggota: DestinasiNavigasi {
+    override val route = "anggota_Detail"
+    override val titleRes = "Detail Anggota"
+    const val IDANGGOTA = "idAnggota"
+    val routeWithArgs = "$route/{$IDANGGOTA}"
+}
