@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import com.example.uas_pam.ui.View.Anggota.DetailAnggotaView
 import com.example.uas_pam.ui.View.Anggota.EntryAnggotaScreen
 import com.example.uas_pam.ui.View.Anggota.ListAnggotaScreen
+import com.example.uas_pam.ui.View.Anggota.updateAnggotaView
 import com.example.uas_pam.ui.View.Buku.DetailView
 import com.example.uas_pam.ui.View.Buku.EntryBukuScreen
 import com.example.uas_pam.ui.View.Buku.HomeScreen
@@ -79,7 +80,7 @@ fun PengelolaHalaman(
             idAnggota?.let { idAnggota ->
                 DetailAnggotaView(
                     navigateBack = { navController.navigateUp() },
-                    onEditClick = {},
+                    onEditClick = { navController.navigate("${DestinasiUpdateAnggota.route}/$idAnggota") },
                 )
             }
         }
@@ -110,6 +111,22 @@ fun PengelolaHalaman(
             val idBuku = it.arguments?.getInt(DestinasiUpdateBuku.IDBUKU)
             idBuku.let { idBuku ->
                 updateBukuView(
+                    navigateBack = { navController.navigateUp() }
+                )
+            }
+        }
+
+        composable(
+            DestinasiUpdateAnggota.routeWithArgs,
+            arguments = listOf(
+                navArgument(DestinasiUpdateAnggota.IDANGGOTA) {
+                    type = NavType.IntType
+                }
+            )
+        ){
+            val idAnggota = it.arguments?.getInt(DestinasiUpdateAnggota.IDANGGOTA)
+            idAnggota.let { idAnggota ->
+                updateAnggotaView(
                     navigateBack = { navController.navigateUp() }
                 )
             }

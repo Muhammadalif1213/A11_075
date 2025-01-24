@@ -51,3 +51,10 @@ object DestinasiDetailAnggota: DestinasiNavigasi {
     const val IDANGGOTA = "idAnggota"
     val routeWithArgs = "$route/{$IDANGGOTA}"
 }
+
+object DestinasiUpdateAnggota: DestinasiNavigasi {
+    override val route = "anggota_update"
+    override val titleRes= "Update Anggota"
+    const val IDANGGOTA = "idAnggota"
+    val routeWithArgs = "$route/{$IDANGGOTA}"
+}
