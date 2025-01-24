@@ -4,8 +4,11 @@ import com.example.uas_pam.repository.AnggotaRepository
 import com.example.uas_pam.repository.BukuRepository
 import com.example.uas_pam.repository.NetworkAnggotaRepository
 import com.example.uas_pam.repository.NetworkBukuRepository
+import com.example.uas_pam.repository.NetworkPeminjamanRepository
+import com.example.uas_pam.repository.PeminjamanRepository
 import com.example.uas_pam.service_api.AnggotaService
 import com.example.uas_pam.service_api.BukuService
+import com.example.uas_pam.service_api.PeminjamanService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -14,6 +17,7 @@ import retrofit2.Retrofit
 interface AppContainer{
     val bukuRepository: BukuRepository
     val anggotaRepository: AnggotaRepository
+    val peminjamanRepository: PeminjamanRepository
 }
 
 class PerpusContainer: AppContainer{
@@ -35,5 +39,12 @@ class PerpusContainer: AppContainer{
 
     override val anggotaRepository: AnggotaRepository by lazy {
         NetworkAnggotaRepository(anggotaService)
+    }
+
+    private val peminjamanService: PeminjamanService by lazy {
+        retrofit.create(PeminjamanService::class.java)
+    }
+    override val peminjamanRepository: PeminjamanRepository by lazy {
+        NetworkPeminjamanRepository(peminjamanService)
     }
 }
