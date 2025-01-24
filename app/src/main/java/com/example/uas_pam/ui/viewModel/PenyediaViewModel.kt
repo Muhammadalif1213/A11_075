@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.uas_pam.PerpusApplication
+import com.example.uas_pam.ui.viewModel.Anggota.DetailAnggotaViewModel
 import com.example.uas_pam.ui.viewModel.Anggota.InsertAnggotaViewModel
 import com.example.uas_pam.ui.viewModel.Anggota.ListAnggotaViewModel
 import com.example.uas_pam.ui.viewModel.Buku.DetailBukuViewModel
@@ -40,6 +41,12 @@ object PenyediaViewModel{
             UpdateBukuViewModel(
                 createSavedStateHandle(),
                 perpusApp().container.bukuRepository
+            )
+        }
+        initializer {
+            DetailAnggotaViewModel(
+                createSavedStateHandle(),
+                perpusApp().container.anggotaRepository
             )
         }
     }
