@@ -18,7 +18,7 @@ class NetworkAnggotaRepository(
     override suspend fun getAnggota(): List<Anggota> = anggotaApiService.getAnggota()
 
     override suspend fun getAnggotaById(idAnggota: Int): Anggota {
-        TODO("Not yet implemented")
+        return anggotaApiService.getAnggotaById(idAnggota)
     }
 
     override suspend fun insertAnggota(anggota: Anggota) {
@@ -26,7 +26,7 @@ class NetworkAnggotaRepository(
     }
 
     override suspend fun editAnggota(idAnggota: Int, anggota: Anggota) {
-        TODO("Not yet implemented")
+        anggotaApiService.editAnggota(idAnggota, anggota)
     }
 
     override suspend fun deleteAnggota(idAnggota: Int) {

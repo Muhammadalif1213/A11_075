@@ -19,7 +19,7 @@ interface AnggotaService {
     suspend fun getAnggota(): List<Anggota>
 
     @GET("baca1anggota.php")
-    suspend fun getAnggotaById(@Query("id_anggota") idAnggota: String): Anggota
+    suspend fun getAnggotaById(@Query("id_anggota") idAnggota: Int): Anggota
 
     @POST("insertanggota.php")
     suspend fun insertAnggota(@Body anggota: Anggota)
