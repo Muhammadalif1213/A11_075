@@ -9,6 +9,7 @@ import com.example.uas_pam.PerpusApplication
 import com.example.uas_pam.ui.viewModel.Anggota.DetailAnggotaViewModel
 import com.example.uas_pam.ui.viewModel.Anggota.InsertAnggotaViewModel
 import com.example.uas_pam.ui.viewModel.Anggota.ListAnggotaViewModel
+import com.example.uas_pam.ui.viewModel.Anggota.UpdateAnggotaViewModel
 import com.example.uas_pam.ui.viewModel.Buku.DetailBukuViewModel
 import com.example.uas_pam.ui.viewModel.Buku.InsertBukuViewModel
 import com.example.uas_pam.ui.viewModel.Buku.ListBukuViewModel
@@ -45,6 +46,12 @@ object PenyediaViewModel{
         }
         initializer {
             DetailAnggotaViewModel(
+                createSavedStateHandle(),
+                perpusApp().container.anggotaRepository
+            )
+        }
+        initializer {
+            UpdateAnggotaViewModel(
                 createSavedStateHandle(),
                 perpusApp().container.anggotaRepository
             )
