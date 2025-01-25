@@ -14,6 +14,8 @@ import com.example.uas_pam.ui.viewModel.Buku.DetailBukuViewModel
 import com.example.uas_pam.ui.viewModel.Buku.InsertBukuViewModel
 import com.example.uas_pam.ui.viewModel.Buku.ListBukuViewModel
 import com.example.uas_pam.ui.viewModel.Buku.UpdateBukuViewModel
+import com.example.uas_pam.ui.viewModel.Peminjaman.InsertPeminjamanViewModel
+import com.example.uas_pam.ui.viewModel.Peminjaman.ListPeminjamanViewModel
 
 object PenyediaViewModel{
     val Factory = viewModelFactory {
@@ -55,6 +57,15 @@ object PenyediaViewModel{
                 createSavedStateHandle(),
                 perpusApp().container.anggotaRepository
             )
+        }
+        initializer {
+            ListPeminjamanViewModel(perpusApp().container.peminjamanRepository)
+        }
+        initializer {
+            InsertAnggotaViewModel(perpusApp().container.anggotaRepository)
+        }
+        initializer {
+            InsertPeminjamanViewModel(perpusApp().container.peminjamanRepository)
         }
     }
 }
