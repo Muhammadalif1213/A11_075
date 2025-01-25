@@ -17,6 +17,8 @@ import com.example.uas_pam.ui.View.Buku.EntryBukuScreen
 import com.example.uas_pam.ui.View.Buku.HomeScreen
 import com.example.uas_pam.ui.View.Buku.updateBukuView
 import com.example.uas_pam.ui.View.HomeAppView
+import com.example.uas_pam.ui.View.Peminjaman.EntryPeminjamanScreen
+import com.example.uas_pam.ui.View.Peminjaman.PeminjamanScreen
 
 @Composable
 fun PengelolaHalaman(
@@ -35,17 +37,19 @@ fun PengelolaHalaman(
             modifier = modifier,
             onNavigateMenuAnggota ={ navController.navigate(DestinasiListAnggota.route) },
             onNavigateMenuBuku = {navController.navigate(DestinasiListBuku.route)},
-            onNavigateAddBrg = {},
+            onNavigateAddBrg = {navController.navigate(DestinasiListPeminjaman.route)},
             onNavigateListBrg = {}
         )
         }
         composable(DestinasiEntryBuku.route) {
             EntryBukuScreen(
-                navigateBack = { navController.popBackStack() }
+                navigateBack = { navController.popBackStack() },
+                onBackClick = { navController.navigateUp() }
             )
         }
         composable(DestinasiListBuku.route) {
             HomeScreen(
+                NavigateBack = { navController.navigateUp() },
                 navigateToItemEntry = { navController.navigate(DestinasiEntryBuku.route) },
                 onDetailClick = { idBuku ->
                     val idBuku = idBuku
@@ -66,7 +70,8 @@ fun PengelolaHalaman(
                 onDetailClick = { idAnggota ->
                     val idAnggota = idAnggota
                     navController.navigate("${"${DestinasiDetailAnggota.route}/$idAnggota"}")
-                }
+                },
+                NavigateUp = { navController.navigateUp() }
             )
         }
         composable(DestinasiDetailAnggota.routeWithArgs,
@@ -81,6 +86,7 @@ fun PengelolaHalaman(
                 DetailAnggotaView(
                     navigateBack = { navController.navigateUp() },
                     onEditClick = { navController.navigate("${DestinasiUpdateAnggota.route}/$idAnggota") },
+                    onBackClick = { navController.popBackStack() }
                 )
             }
         }
@@ -130,6 +136,18 @@ fun PengelolaHalaman(
                     navigateBack = { navController.navigateUp() }
                 )
             }
+        }
+        composable(DestinasiListPeminjaman.route) {
+            PeminjamanScreen(
+                NavigateBack = { navController.navigateUp() },
+                navigateToItemEntry = { navController.navigate(DestinasiEntryPeminjaman.route) },
+            )
+        }
+        composable(DestinasiEntryPeminjaman.route) {
+            EntryPeminjamanScreen(
+                navigateBack = { navController.navigateUp() },
+                onBackClick = { navController.navigateUp() }
+            )
         }
     }
 }

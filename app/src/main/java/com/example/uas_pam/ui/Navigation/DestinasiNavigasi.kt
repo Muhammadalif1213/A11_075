@@ -17,7 +17,7 @@ object DestinasiEntryBuku: DestinasiNavigasi {
 
 object DestinasiListBuku: DestinasiNavigasi {
     override val route = "item_list"
-    override val titleRes = "List Buku"
+    override val titleRes = "Menu Buku"
 }
 
 object DestinasiDetailBuku: DestinasiNavigasi {
@@ -57,4 +57,14 @@ object DestinasiUpdateAnggota: DestinasiNavigasi {
     override val titleRes= "Update Anggota"
     const val IDANGGOTA = "idAnggota"
     val routeWithArgs = "$route/{$IDANGGOTA}"
+}
+
+object DestinasiListPeminjaman: DestinasiNavigasi {
+    override val route = "peminjaman_list"
+    override val titleRes= "Menu Peminjaman"
+}
+
+object DestinasiEntryPeminjaman: DestinasiNavigasi {
+    override val route = "peminjaman_entry"
+    override val titleRes= "Entry Peminjaman"
 }
