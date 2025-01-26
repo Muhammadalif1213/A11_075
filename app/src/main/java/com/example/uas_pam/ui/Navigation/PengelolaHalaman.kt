@@ -17,8 +17,10 @@ import com.example.uas_pam.ui.View.Buku.EntryBukuScreen
 import com.example.uas_pam.ui.View.Buku.HomeScreen
 import com.example.uas_pam.ui.View.Buku.updateBukuView
 import com.example.uas_pam.ui.View.HomeAppView
+import com.example.uas_pam.ui.View.Peminjaman.DetailViewPeminjaman
 import com.example.uas_pam.ui.View.Peminjaman.EntryPeminjamanScreen
 import com.example.uas_pam.ui.View.Peminjaman.PeminjamanScreen
+import com.example.uas_pam.ui.View.Pengembalian.PengembalianScreen
 
 @Composable
 fun PengelolaHalaman(
@@ -38,7 +40,7 @@ fun PengelolaHalaman(
             onNavigateMenuAnggota ={ navController.navigate(DestinasiListAnggota.route) },
             onNavigateMenuBuku = {navController.navigate(DestinasiListBuku.route)},
             onNavigateAddBrg = {navController.navigate(DestinasiListPeminjaman.route)},
-            onNavigateListBrg = {}
+            onNavigateListBrg = {navController.navigate(DestinasiListPengembalian.route)}
         )
         }
         composable(DestinasiEntryBuku.route) {
@@ -141,6 +143,10 @@ fun PengelolaHalaman(
             PeminjamanScreen(
                 NavigateBack = { navController.navigateUp() },
                 navigateToItemEntry = { navController.navigate(DestinasiEntryPeminjaman.route) },
+                navigateToDetail = { idPeminjaman ->
+                    val idPeminjaman = idPeminjaman
+                    navController.navigate("${"${DestinasiDetailPeminjaman.route}/$idPeminjaman"}")
+                }
             )
         }
         composable(DestinasiEntryPeminjaman.route) {
@@ -149,5 +155,27 @@ fun PengelolaHalaman(
                 onBackClick = { navController.navigateUp() }
             )
         }
+        composable(DestinasiDetailPeminjaman.routeWithArgs,
+            arguments = listOf(
+                navArgument(DestinasiDetailPeminjaman.IDPINJAM){
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            val idPeminjaman = it.arguments?.getInt(DestinasiDetailPeminjaman.IDPINJAM)
+            idPeminjaman?.let { idPeminjaman ->
+                DetailViewPeminjaman(
+                    navigateBack = { navController.navigateUp() },
+                    onEditClick = {navController.navigate("${DestinasiUpdateBuku.route}/$idPeminjaman")},
+                )
+            }
+        }
+        composable(DestinasiListPengembalian.route) {
+            PengembalianScreen(
+                NavigateBack = { navController.navigateUp() },
+                navigateToItemEntry = {},
+            )
+        }
+
     }
 }
