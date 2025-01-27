@@ -20,7 +20,11 @@ import com.example.uas_pam.ui.View.HomeAppView
 import com.example.uas_pam.ui.View.Peminjaman.DetailViewPeminjaman
 import com.example.uas_pam.ui.View.Peminjaman.EntryPeminjamanScreen
 import com.example.uas_pam.ui.View.Peminjaman.PeminjamanScreen
+import com.example.uas_pam.ui.View.Peminjaman.updatePeminjamanView
+import com.example.uas_pam.ui.View.Pengembalian.DetailViewPengembalian
+import com.example.uas_pam.ui.View.Pengembalian.EntryPengembalianScreen
 import com.example.uas_pam.ui.View.Pengembalian.PengembalianScreen
+import com.example.uas_pam.ui.View.Pengembalian.updatePengembalianScreen
 
 @Composable
 fun PengelolaHalaman(
@@ -166,16 +170,72 @@ fun PengelolaHalaman(
             idPeminjaman?.let { idPeminjaman ->
                 DetailViewPeminjaman(
                     navigateBack = { navController.navigateUp() },
-                    onEditClick = {navController.navigate("${DestinasiUpdateBuku.route}/$idPeminjaman")},
+                    onEditClick = {navController.navigate("${DestinasiUpdatePeminjaman.route}/$idPeminjaman")},
                 )
             }
         }
+
+        composable(DestinasiUpdatePeminjaman.routeWithArgs,
+            arguments = listOf(
+                navArgument(DestinasiUpdatePeminjaman.IDPINJAM) {
+                    type = NavType.IntType
+                }
+            )
+        ){
+            val idPeminjaman = it.arguments?.getInt(DestinasiUpdatePeminjaman.IDPINJAM)
+            idPeminjaman.let { idPeminjaman ->
+                updatePeminjamanView(
+                    navigateBack = { navController.navigateUp() }
+                )
+            }
+        }
+
         composable(DestinasiListPengembalian.route) {
             PengembalianScreen(
                 NavigateBack = { navController.navigateUp() },
-                navigateToItemEntry = {},
+                navigateToItemEntry = { navController.navigate(DestinasiInsertPengembalian.route) },
+                onDetailClick = { idPengembalian ->
+                    val idPengembalian = idPengembalian
+                    navController.navigate("${"${DestinasiDetailPengembalian.route}/$idPengembalian"}")
+                }
+            )
+        }
+        composable(DestinasiInsertPengembalian.route) {
+            EntryPengembalianScreen(
+                navigateBack = { navController.navigateUp() },
+                onBackClick = { navController.navigateUp() }
             )
         }
 
+        composable(DestinasiDetailPengembalian.routeWithArgs,
+            arguments = listOf(
+                navArgument(DestinasiDetailPengembalian.IDKEMBALI){
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            val idPengembalian = it.arguments?.getInt(DestinasiDetailPengembalian.IDKEMBALI)
+            idPengembalian?.let { idPengembalian ->
+                DetailViewPengembalian(
+                    navigateBack = { navController.navigateUp() },
+                    onEditClick = { navController.navigate("${DestinasiUpdatePengembalian.route}/$idPengembalian") },
+                )
+            }
+        }
+
+        composable(DestinasiUpdatePengembalian.routeWithArgs,
+            arguments = listOf(
+                navArgument(DestinasiUpdatePengembalian.IDKEMBALI) {
+                    type = NavType.IntType
+                }
+            )
+        ){
+            val idPengembalian = it.arguments?.getInt(DestinasiUpdatePengembalian.IDKEMBALI)
+            idPengembalian.let { idPengembalian ->
+                updatePengembalianScreen(
+                    navigateBack = { navController.navigateUp() }
+                )
+            }
+        }
     }
 }
