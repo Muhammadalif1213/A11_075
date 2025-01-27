@@ -17,7 +17,11 @@ import com.example.uas_pam.ui.viewModel.Buku.UpdateBukuViewModel
 import com.example.uas_pam.ui.viewModel.Peminjaman.DetailPeminjamanViewModel
 import com.example.uas_pam.ui.viewModel.Peminjaman.InsertPeminjamanViewModel
 import com.example.uas_pam.ui.viewModel.Peminjaman.ListPeminjamanViewModel
+import com.example.uas_pam.ui.viewModel.Peminjaman.UpdatePeminjamanViewModel
+import com.example.uas_pam.ui.viewModel.Pengembalian.DetailPengembalianViewModel
+import com.example.uas_pam.ui.viewModel.Pengembalian.InsertPengembalianViewModel
 import com.example.uas_pam.ui.viewModel.Pengembalian.ListPengembalianViewModel
+import com.example.uas_pam.ui.viewModel.Pengembalian.UpdatePengembalianViewModel
 
 object PenyediaViewModel{
     val Factory = viewModelFactory {
@@ -80,7 +84,33 @@ object PenyediaViewModel{
             )
         }
         initializer {
+            UpdatePeminjamanViewModel(
+                createSavedStateHandle(),
+                perpusApp().container.peminjamanRepository
+            )
+        }
+
+        initializer {
             ListPengembalianViewModel(
+                perpusApp().container.pengembalianRepository
+            )
+        }
+
+        initializer {
+            InsertPengembalianViewModel(
+                perpusApp().container.peminjamanRepository,
+                perpusApp().container.pengembalianRepository,
+            )
+        }
+        initializer {
+            DetailPengembalianViewModel(
+                createSavedStateHandle(),
+                perpusApp().container.pengembalianRepository
+            )
+        }
+        initializer {
+            UpdatePengembalianViewModel(
+                createSavedStateHandle(),
                 perpusApp().container.pengembalianRepository
             )
         }
