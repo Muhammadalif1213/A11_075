@@ -71,7 +71,14 @@ object DestinasiEntryPeminjaman: DestinasiNavigasi {
 
 object DestinasiDetailPeminjaman: DestinasiNavigasi {
     override val route = "peminjaman_Detail"
-    override val titleRes = "Detail Buku"
+    override val titleRes = "Detail Peminjaman"
+    const val IDPINJAM = "idPeminjaman"
+    val routeWithArgs = "$route/{$IDPINJAM}"
+}
+
+object DestinasiUpdatePeminjaman: DestinasiNavigasi {
+    override val route = "peminjaman_update"
+    override val titleRes= "Update Peminjaman"
     const val IDPINJAM = "idPeminjaman"
     val routeWithArgs = "$route/{$IDPINJAM}"
 }
@@ -79,4 +86,23 @@ object DestinasiDetailPeminjaman: DestinasiNavigasi {
 object DestinasiListPengembalian: DestinasiNavigasi {
     override val route = "pengembalian_list"
     override val titleRes= "Menu Pengembalian"
+}
+
+object DestinasiInsertPengembalian: DestinasiNavigasi {
+    override val route = "pengembalian_entry"
+    override val titleRes= "Entry Pengembalian"
+}
+
+object DestinasiDetailPengembalian: DestinasiNavigasi {
+    override val route = "pengembalian_Detail"
+    override val titleRes = "Detail Pengembalian"
+    const val IDKEMBALI = "idPengembalian"
+    val routeWithArgs = "$route/{$IDKEMBALI}"
+}
+
+object DestinasiUpdatePengembalian: DestinasiNavigasi {
+    override val route = "pengembalian_update"
+    override val titleRes= "Update Pengembalian"
+    const val IDKEMBALI = "idPengembalian"
+    val routeWithArgs = "$route/{$IDKEMBALI}"
 }
