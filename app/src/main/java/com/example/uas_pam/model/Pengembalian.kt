@@ -12,6 +12,11 @@ data class Pengembalian (
     @SerialName("id_peminjaman")
     val idPeminjaman: Int,
 
+    val nama: String,
+    val judul: String,
+
     @SerialName("tanggal_dikembalikan")
     val tanggalDikembalikan: String,
+
+    val denda: String
 )
