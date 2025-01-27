@@ -21,7 +21,7 @@ interface PeminjamanService {
     @POST("insertpeminjaman.php")
     suspend fun insertPeminjaman(@Body peminjaman: Peminjaman)
 
-    @GET("bacapeminjaman.php")
+    @GET("baca1peminjaman.php")
     suspend fun getPeminjamanById(@Query("id_peminjaman") idPeminjaman: Int): Peminjaman
 
     @PUT("editpeminjaman.php/{id_peminjaman}")
