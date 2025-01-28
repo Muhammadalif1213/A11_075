@@ -1,9 +1,13 @@
 package com.example.uas_pam.ui.View.Pengembalian
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -28,6 +32,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -35,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.uas_pam.ui.CustomWidget.CustomTopAppBar
 import com.example.uas_pam.ui.Navigation.DestinasiInsertPengembalian
+import com.example.uas_pam.ui.viewModel.Peminjaman.ListPeminjamanUiState
+import com.example.uas_pam.ui.viewModel.Peminjaman.ListPeminjamanViewModel
 import com.example.uas_pam.ui.viewModel.Pengembalian.BukuOptionPengembalian
 import com.example.uas_pam.ui.viewModel.Pengembalian.InsertPengembalianUiEvent
 import com.example.uas_pam.ui.viewModel.Pengembalian.InsertPengembalianUiState
@@ -49,7 +56,8 @@ fun EntryPengembalianScreen(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
-    viewModel: InsertPengembalianViewModel = viewModel(factory = PenyediaViewModel.Factory)
+    viewModel: InsertPengembalianViewModel = viewModel(factory = PenyediaViewModel.Factory),
+    viewModelPeminjaman: ListPeminjamanViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ){
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -69,21 +77,38 @@ fun EntryPengembalianScreen(
         }
     ){
             innerPadding ->
-        EntryPengembalianBody(
-            insertUiState = viewModel.uiState,
-            onPengembalianValueChange = viewModel::updateInsertPengembalianState,
-            bukuOptionsPengembalian = viewModel.bukuOptions,
-            modifier = Modifier
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .fillMaxWidth(),
-            onSavePengembalianClick = {
-                coroutineScope.launch {
-                    viewModel.insertPengembalian()
-                    onBackClick()
+        Column (
+            modifier = Modifier.padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Text(text = "List Peminjaman Buku",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(top = 30.dp))
+
+            PeminjamanTablePengembalian(
+                listPeminjamanUiState = viewModelPeminjaman.peminjamanUiState,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Text(text = "Silahkan isi data pengembalian",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(top = 30.dp))
+
+            EntryPengembalianBody(
+                insertUiState = viewModel.uiState,
+                onPengembalianValueChange = viewModel::updateInsertPengembalianState,
+                bukuOptionsPengembalian = viewModel.bukuOptions,
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth(),
+                onSavePengembalianClick = {
+                    coroutineScope.launch {
+                        viewModel.insertPengembalian()
+                        onBackClick()
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 }
 
@@ -272,6 +297,91 @@ fun DatePickerDialog(
     DisposableEffect(Unit) {
         onDispose {
             datePickerDialog.dismiss()
+        }
+    }
+}
+
+@Composable
+fun PeminjamanTablePengembalian(
+    listPeminjamanUiState: ListPeminjamanUiState,
+    modifier: Modifier = Modifier,
+) {
+    when (listPeminjamanUiState) {
+        is ListPeminjamanUiState.Loading -> {
+            Text(
+                text = "Memuat data...",
+                modifier = modifier.padding(16.dp),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+        is ListPeminjamanUiState.Success -> {
+
+            if (listPeminjamanUiState.listPeminjaman.isEmpty()) {
+                Text(
+                    text = "Tidak ada peminjaman yang belum dikembalikan",
+                    modifier = modifier.padding(16.dp),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            } else {
+                // Scrollable column
+                Column(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState()) // Enable vertical scroll
+                ) {
+                    // Table Header
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                            .background(MaterialTheme.colorScheme.primaryContainer)
+                            .padding(horizontal = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        HeaderCell(text = "ID", modifier = Modifier.weight(2f))
+                        Spacer(modifier = Modifier.weight(1f))
+                        HeaderCell(text = "Buku", modifier = Modifier.weight(2f))
+                        Spacer(modifier = Modifier.weight(1f))
+                        HeaderCell(text = "Anggota", modifier = Modifier.weight(2f))
+                        Spacer(modifier = Modifier.weight(1f))
+                        HeaderCell(text = "Tanggal Peminjaman", modifier = Modifier.weight(2f))
+                        Spacer(modifier = Modifier.weight(1f))
+                        HeaderCell(text = "Tanggal Pengembalian", modifier = Modifier.weight(2f))
+                        Spacer(modifier = Modifier.weight(1f))
+                        HeaderCell(text = "Status", modifier = Modifier.weight(2f))
+                    }
+
+                    // Table Rows
+                    listPeminjamanUiState.listPeminjaman.forEach { peminjaman ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                                .padding(horizontal = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            BodyCell(text = peminjaman.idPeminjaman.toString(), modifier = Modifier.weight(2f))
+                            Spacer(modifier = Modifier.weight(1f))
+                            BodyCell(text = peminjaman.judulBuku, modifier = Modifier.weight(2f))
+                            Spacer(modifier = Modifier.weight(1f))
+                            BodyCell(text = peminjaman.namaAnggota, modifier = Modifier.weight(2f))
+                            Spacer(modifier = Modifier.weight(1f))
+                            BodyCell(text = peminjaman.tanggalPeminjaman, modifier = Modifier.weight(2f))
+                            Spacer(modifier = Modifier.weight(1f))
+                            BodyCell(text = peminjaman.tanggalPengembalian, modifier = Modifier.weight(2f))
+                            Spacer(modifier = Modifier.weight(1f))
+                            BodyCell(text = peminjaman.status, modifier = Modifier.weight(2f))
+                        }
+                    }
+                }
+            }
+        }
+        is ListPeminjamanUiState.Error -> {
+            Text(
+                text = "Gagal memuat data. Coba lagi.",
+                modifier = modifier.padding(16.dp),
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 }
