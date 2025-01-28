@@ -150,7 +150,8 @@ fun PengelolaHalaman(
                 navigateToDetail = { idPeminjaman ->
                     val idPeminjaman = idPeminjaman
                     navController.navigate("${"${DestinasiDetailPeminjaman.route}/$idPeminjaman"}")
-                }
+                },
+                navigateToPengembalianEntry = { navController.navigate(DestinasiListPengembalian.route) }
             )
         }
         composable(DestinasiEntryPeminjaman.route) {
