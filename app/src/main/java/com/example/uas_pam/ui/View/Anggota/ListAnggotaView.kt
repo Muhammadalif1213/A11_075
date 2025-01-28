@@ -1,6 +1,7 @@
 package com.example.uas_pam.ui.View.Anggota
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,30 +11,42 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.uas_pam.R
@@ -49,6 +62,7 @@ import com.example.uas_pam.ui.viewModel.PenyediaViewModel
 @Composable
 fun ListAnggotaScreen(
     navigateToAnggotaEntry: () -> Unit,
+    NavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     onDetailClick: (String) -> Unit = {},
     viewModel: ListAnggotaViewModel = viewModel(factory = PenyediaViewModel.Factory)
@@ -58,8 +72,9 @@ fun ListAnggotaScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CustomTopAppBar(
+                navigateUp = NavigateUp,
                 title = DestinasiListAnggota.titleRes,
-                canNavigateBack = false,
+                canNavigateBack = true,
                 scrollBehavior = scrollBehavior,
                 onRefresh = {
                     viewModel.getAnggota()
@@ -68,62 +83,28 @@ fun ListAnggotaScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
+            ExtendedFloatingActionButton(
                 onClick = navigateToAnggotaEntry,
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(18.dp)
-            ){
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add Mahasiswa"
-                )
-            }
+                text = { Text("Tambah Anggota") },
+                icon = { Icon(Icons.Default.Add, contentDescription = "Add Buku") },
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+            )
         }
     ){
             innerPadding ->
-        HomeStatus(
-            listAnggotaUiState = viewModel.anggotaUiState,
-            retryAction = { viewModel.getAnggota() },
+        Column (
             modifier = Modifier
-                .padding(innerPadding),
-            onDetailClick = onDetailClick,
-            onDeleteClick = {
-                viewModel.deleteAnggota(it.idAnggota)
-            }
-        )
-    }
-}
-
-
-@Composable
-fun HomeStatus(
-    listAnggotaUiState: ListAnggotaUiState,
-    retryAction: () -> Unit,
-    modifier: Modifier = Modifier,
-    onDeleteClick: (Anggota) -> Unit = {},
-    onDetailClick: (String) -> Unit = {}
-){
-    when(listAnggotaUiState) {
-        is ListAnggotaUiState.Loading -> OnLoading(modifier = Modifier.fillMaxSize())
-
-        is ListAnggotaUiState.Success ->
-            if (listAnggotaUiState.listAnggota.isEmpty()) {
-                return Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "Tidak ada data anggota")
-                }
-            }else{
-                MhsLayout(
-                    anggota = listAnggotaUiState.listAnggota,
-                    modifier = modifier.fillMaxWidth(),
-                    onDeleteClick = {
-                        onDeleteClick(it)
-                    },
-                    onDetailClick = {
-                        onDetailClick(it.idAnggota.toString())
-                    }
-                )
-            }
-        is ListAnggotaUiState.Error -> onErr(retryAction, modifier = Modifier.fillMaxSize())
+                .padding(innerPadding)
+                .fillMaxSize()
+                .background(Color(0xFF2196F3))
+        ){
+            anggotaLayout(
+                modifier = Modifier.padding(8.dp),
+                onDetailClick = onDetailClick,
+                ListAnggotaUiState = viewModel.anggotaUiState
+            )
+        }
     }
 }
 
@@ -157,76 +138,130 @@ fun onErr(
 }
 
 @Composable
-fun MhsLayout(
-    anggota: List<Anggota>,
-    modifier: Modifier = Modifier,
-    onDeleteClick: (Anggota) -> Unit = {},
-    onDetailClick: (Anggota) -> Unit
+fun anggotaLayout(
+    modifier: Modifier,
+    onDetailClick: (String) -> Unit,
+    ListAnggotaUiState: ListAnggotaUiState
 ){
-    LazyColumn (
-        modifier = modifier,
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+    Card (
+        modifier = modifier
+            .fillMaxWidth()
+            .background(color = Color(0xFF42A5F5)),
+        elevation = CardDefaults.cardElevation(2.dp),
+        shape = MaterialTheme.shapes.medium,
     ){
-        items(anggota){anggota ->
-            AnggotaCard(
-                anggota = anggota,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onDetailClick(anggota) },
-                onDeleteClick = {
-                    onDeleteClick(anggota)
+        AnggotaTable(
+            listAnggotaUiState = ListAnggotaUiState,
+            modifier = Modifier,
+            onDetailClick = onDetailClick
+        )
+    }
+}
+
+@Composable
+fun AnggotaTable(
+    listAnggotaUiState: ListAnggotaUiState,
+    modifier: Modifier = Modifier,
+    onDetailClick: (String) -> Unit
+) {
+    when (listAnggotaUiState) {
+        is ListAnggotaUiState.Loading -> {
+            Text(
+                text = "Memuat data...",
+                modifier = modifier.padding(16.dp),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+        is ListAnggotaUiState.Success -> {
+            if (listAnggotaUiState.listAnggota.isEmpty()) {
+                Text(
+                    text = "Tidak ada data anggota",
+                    modifier = modifier.padding(16.dp),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            } else {
+                // Scrollable column
+                Column(
+                    modifier = modifier
+                        .padding(8.dp)
+                        .verticalScroll(rememberScrollState()) // Enable vertical scroll
+                ) {
+                    // Table Header
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                            .background(MaterialTheme.colorScheme.primaryContainer)
+                            .padding(horizontal = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        HeaderCell(text = "ID", modifier = Modifier.weight(2f))
+                        Spacer(modifier = Modifier.weight(1f))
+                        HeaderCell(text = "Nama", modifier = Modifier.weight(2f))
+                        Spacer(modifier = Modifier.weight(1f))
+                        HeaderCell(text = "Email", modifier = Modifier.weight(2f))
+                        Spacer(modifier = Modifier.weight(1f))
+                        HeaderCell(text = "No HP", modifier = Modifier.weight(2f))
+                    }
+
+                    // Table Rows
+                    listAnggotaUiState.listAnggota.forEach { anggota ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                                .padding(horizontal = 8.dp)
+                                .clickable { onDetailClick(anggota.idAnggota.toString()) },
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            BodyCell(text = anggota.idAnggota.toString(), modifier = Modifier.weight(2f))
+                            Spacer(modifier = Modifier.weight(1f))
+                            BodyCell(text = anggota.nama, modifier = Modifier.weight(3f))
+                            Spacer(modifier = Modifier.weight(1f))
+                            BodyCell(text = anggota.email, modifier = Modifier.weight(3f))
+                            Spacer(modifier = Modifier.weight(1f))
+                            BodyCell(text = anggota.nomorTelepon, modifier = Modifier.weight(2f))
+                        }
+                    }
                 }
+            }
+        }
+        is ListAnggotaUiState.Error -> {
+            Text(
+                text = "Gagal memuat data. Coba lagi.",
+                modifier = modifier.padding(16.dp),
+                style = MaterialTheme.typography.bodyMedium
             )
         }
     }
 }
 
+@Composable
+fun HeaderCell(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = text,
+        modifier = modifier
+            .padding(vertical = 8.dp),
+        style = MaterialTheme.typography.labelLarge,
+        maxLines = 1,
+        textAlign = TextAlign.Center // Center text in header
+    )
+}
 
 @Composable
-fun AnggotaCard(
-    anggota: Anggota,
-    modifier: Modifier = Modifier,
-    onDeleteClick: (Anggota) -> Unit = {}
+fun BodyCell(
+    text: String,
+    modifier: Modifier = Modifier
 ) {
-    Card(
-        modifier = modifier,
-        shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Row (
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(
-                    text = anggota.nama,
-                    style = MaterialTheme.typography.titleLarge)
-                Spacer(Modifier.weight(1f))
-                IconButton(onClick = { onDeleteClick(anggota) }) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = null
-                    )
-                }
-                Text(
-                    text = anggota.idAnggota.toString(),
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier =  Modifier
-                )
-            }
-            Text(
-                text = anggota.email,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = anggota.nomorTelepon,
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-
-    }
+    Text(
+        text = text,
+        modifier = modifier
+            .padding(vertical = 8.dp),
+        style = MaterialTheme.typography.bodyMedium,
+        maxLines = 1,
+        textAlign = TextAlign.Center // Center text in body
+    )
 }
