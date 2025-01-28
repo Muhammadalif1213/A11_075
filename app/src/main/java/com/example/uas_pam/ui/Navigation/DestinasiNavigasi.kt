@@ -12,7 +12,7 @@ object DestinasiHome: DestinasiNavigasi {
 
 object DestinasiEntryBuku: DestinasiNavigasi {
     override val route = "item_entry"
-    override val titleRes= "Entry Buku"
+    override val titleRes= "Input Buku"
 }
 
 object DestinasiListBuku: DestinasiNavigasi {
@@ -37,7 +37,7 @@ object DestinasiUpdateBuku: DestinasiNavigasi {
 
 object DestinasiEntryAnggota: DestinasiNavigasi {
     override val route = "Anggota_entry"
-    override val titleRes= "Entry Anggota"
+    override val titleRes= "Input Anggota"
 }
 
 object DestinasiListAnggota: DestinasiNavigasi {
@@ -66,7 +66,7 @@ object DestinasiListPeminjaman: DestinasiNavigasi {
 
 object DestinasiEntryPeminjaman: DestinasiNavigasi {
     override val route = "peminjaman_entry"
-    override val titleRes= "Entry Peminjaman"
+    override val titleRes= "Input Peminjaman"
 }
 
 object DestinasiDetailPeminjaman: DestinasiNavigasi {
@@ -90,7 +90,7 @@ object DestinasiListPengembalian: DestinasiNavigasi {
 
 object DestinasiInsertPengembalian: DestinasiNavigasi {
     override val route = "pengembalian_entry"
-    override val titleRes= "Entry Pengembalian"
+    override val titleRes= "input Pengembalian"
 }
 
 object DestinasiDetailPengembalian: DestinasiNavigasi {
