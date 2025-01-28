@@ -94,24 +94,13 @@ fun PengembalianScreen(
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                label = { Text("Cari pengembalian...") },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search Icon") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                singleLine = true,
-                shape = MaterialTheme.shapes.large
-            )
-
             // Table for Pengembalian Data
             PengembalianTable(
                 listPengembalianUiState = viewModel.pengembalianUiState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(16.dp),
+                onDetailClick = onDetailClick
             )
         }
     }
@@ -121,7 +110,8 @@ fun PengembalianScreen(
 fun PengembalianTable(
     listPengembalianUiState: ListPengembalianUiState,
     modifier: Modifier = Modifier,
-    viewModel: ListPengembalianViewModel = viewModel(factory = PenyediaViewModel.Factory)
+    viewModel: ListPengembalianViewModel = viewModel(factory = PenyediaViewModel.Factory),
+    onDetailClick: (String) -> Unit = {}
 ) {
     when (val state = listPengembalianUiState) {
         is ListPengembalianUiState.Loading -> {
@@ -149,7 +139,10 @@ fun PengembalianTable(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             HeaderCell(text = "IDPengembalian", modifier = Modifier.weight(2f))
+                            HeaderCell(text = "Nama", modifier = Modifier.weight(2f))
+                            HeaderCell(text = "Judul", modifier = Modifier.weight(2f))
                             HeaderCell(text = "Tanggal dikembalikan", modifier = Modifier.weight(2f))
+                            HeaderCell(text = "Denda", modifier = Modifier.weight(2f))
                         }
                     }
 
@@ -159,7 +152,7 @@ fun PengembalianTable(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp)
-                                .clickable { },
+                                .clickable { onDetailClick(pengembalian.idPengembalian.toString()) },
                             elevation = CardDefaults.cardElevation(4.dp)
                         ) {
                             Row(
@@ -169,7 +162,10 @@ fun PengembalianTable(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 BodyCell(text = pengembalian.idPengembalian.toString(), modifier = Modifier.weight(2f))
+                                BodyCell(text = pengembalian.nama, modifier = Modifier.weight(2f))
+                                BodyCell(text = pengembalian.judul, modifier = Modifier.weight(2f))
                                 BodyCell(text = pengembalian.tanggalDikembalikan, modifier = Modifier.weight(2f))
+                                BodyCell(text = pengembalian.denda, modifier = Modifier.weight(2f))
                             }
                         }
                     }
