@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -16,10 +17,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -61,7 +68,12 @@ fun DetailViewPeminjaman(
             modifier = Modifier.padding(innerPadding)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
-            onEditClick = onEditClick
+            onEditClick = onEditClick,
+            onDeleteClick = {
+                detailViewModel.deletePeminjaman(it.idPeminjaman)
+                navigateBack()
+            }
+
         )
     }
 }
@@ -72,13 +84,17 @@ fun StatusDetail(
     modifier: Modifier = Modifier,
     onEditClick: (String) -> Unit = {},
     retryAction: () -> Unit,
+    onDeleteClick: (Peminjaman) -> Unit = {}
 ) {
     when (detailUiState) {
         is DetailPeminjamanUiState.Success -> {
             DetailPeminjamanLayout(
                 peminjaman = detailUiState.peminjaman,
                 onEditClick = { onEditClick(it) },
-                modifier = modifier
+                modifier = modifier,
+                onDeleteClick = {
+                    onDeleteClick(it)
+                }
             )
         }
         is DetailPeminjamanUiState.Loading -> OnLoading(modifier = Modifier)
@@ -90,8 +106,10 @@ fun StatusDetail(
 fun DetailPeminjamanLayout(
     modifier: Modifier = Modifier,
     peminjaman: Peminjaman,
-    onEditClick: (String) -> Unit = {}
+    onEditClick: (String) -> Unit = {},
+    onDeleteClick: (Peminjaman) -> Unit = {}
 ) {
+    var deleteConfifrmationRequired by rememberSaveable { mutableStateOf(false) }
     Column(
         modifier = modifier.padding(16.dp)
     ) {
@@ -119,6 +137,36 @@ fun DetailPeminjamanLayout(
                 fontWeight = FontWeight.Bold
             )
         }
+        Button(
+            onClick = {
+                deleteConfifrmationRequired = true
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+                .height(48.dp),
+            shape = MaterialTheme.shapes.medium,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Red, // Mengatur warna tombol menjadi merah
+                contentColor = Color.White  // Warna teks di dalam tombol tetap putih
+            )
+        ) {
+            Text(
+                text = "Delete",
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+    if (deleteConfifrmationRequired){
+        DeleteAnggotaConfirmationDialog(
+            onDeleteConfirm = {
+                deleteConfifrmationRequired = false
+                onDeleteClick(peminjaman)
+            },
+            onDeleteCancel = {deleteConfifrmationRequired = false},
+            modifier = Modifier.padding(8.dp)
+        )
     }
 }
 
@@ -142,10 +190,10 @@ fun ItemDetailPeminjaman(
             ComponentDetailPeminjaman(judul = "Id Peminjaman", isinya = peminjaman.idPeminjaman.toString())
             Spacer(modifier = Modifier.height(8.dp))
 
-            ComponentDetailPeminjaman(judul = "Id Buku", isinya = peminjaman.judulBuku)
+            ComponentDetailPeminjaman(judul = "Judul Buku", isinya = peminjaman.judulBuku)
             Spacer(modifier = Modifier.height(8.dp))
 
-            ComponentDetailPeminjaman(judul = "Id Anggota", isinya = peminjaman.namaAnggota)
+            ComponentDetailPeminjaman(judul = "Nama Anggota", isinya = peminjaman.namaAnggota)
             Spacer(modifier = Modifier.height(8.dp))
 
             ComponentDetailPeminjaman(judul = "Tanggal Peminjaman", isinya = peminjaman.tanggalPeminjaman)
@@ -183,4 +231,27 @@ fun ComponentDetailPeminjaman(
             color = MaterialTheme.colorScheme.onSurface
         )
     }
+}
+
+@Composable
+private fun DeleteAnggotaConfirmationDialog(
+    onDeleteConfirm: () -> Unit,
+    onDeleteCancel: () -> Unit,
+    modifier: Modifier = Modifier
+){
+    AlertDialog(onDismissRequest = { /* Do Nothing */},
+        title = { Text("Delete Data") },
+        text = { Text("Apakah anda yakin ingin menghapus data? ") },
+        modifier = modifier,
+        dismissButton = {
+            TextButton(onClick = onDeleteCancel) {
+                Text(text = "Cancel")
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDeleteConfirm) {
+                Text(text = "Yes")
+            }
+        }
+    )
 }

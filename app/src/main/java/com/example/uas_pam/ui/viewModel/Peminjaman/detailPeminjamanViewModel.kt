@@ -9,7 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.uas_pam.model.Peminjaman
 import com.example.uas_pam.repository.PeminjamanRepository
 import com.example.uas_pam.ui.Navigation.DestinasiDetailPeminjaman
+import com.example.uas_pam.ui.viewModel.Buku.ListBukuUiState
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 sealed class DetailPeminjamanUiState{
     data class Success(val peminjaman: Peminjaman): DetailPeminjamanUiState()
@@ -37,6 +39,17 @@ class DetailPeminjamanViewModel(
                 DetailPeminjamanUiState.Success(pm.getPeminjamanById(idPeminjaman))
             } catch (e: Exception) {
                 DetailPeminjamanUiState.Error
+            }
+        }
+    }
+    fun deletePeminjaman(id_buku: Int){
+        viewModelScope.launch {
+            try {
+                pm.deletePeminjaman(id_buku)
+            }catch (e: Exception){
+                ListBukuUiState.Error
+            }catch (e: HttpException) {
+                ListBukuUiState.Error
             }
         }
     }
