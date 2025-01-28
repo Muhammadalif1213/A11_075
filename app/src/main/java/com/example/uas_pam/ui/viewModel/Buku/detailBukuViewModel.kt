@@ -10,6 +10,7 @@ import com.example.uas_pam.model.Buku
 import com.example.uas_pam.repository.BukuRepository
 import com.example.uas_pam.ui.Navigation.DestinasiDetailBuku
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 sealed class DetailBukuUiState{
     data class Success(val buku: Buku): DetailBukuUiState()
@@ -36,6 +37,17 @@ class DetailBukuViewModel(
                 DetailBukuUiState.Success(bk.getBukuById(idBuku))
             } catch (e: Exception) {
                 DetailBukuUiState.Error
+            }
+        }
+    }
+    fun deleteBuku(id_buku: Int){
+        viewModelScope.launch {
+            try {
+                bk.deleteBuku(id_buku)
+            }catch (e: Exception){
+                ListBukuUiState.Error
+            }catch (e: HttpException) {
+                ListBukuUiState.Error
             }
         }
     }
