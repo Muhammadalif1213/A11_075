@@ -125,39 +125,6 @@ fun HomeScreen(
 }
 
 @Composable
-fun HomeStatus(
-    listBukuUiState: ListBukuUiState,
-    searchQuery: String,
-    retryAction: () -> Unit,
-    modifier: Modifier = Modifier,
-    onDetailClick: (String) -> Unit = {}
-) {
-    when (listBukuUiState) {
-        is ListBukuUiState.Loading -> OnLoading(modifier = Modifier.fillMaxSize())
-
-        is ListBukuUiState.Success -> {
-            val filteredBooks = listBukuUiState.listBuku.filter {
-                it.judul.contains(searchQuery, ignoreCase = true)
-            }
-            if (filteredBooks.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "Tidak ada data buku")
-                }
-            } else {
-                MhsLayout(
-                    buku = filteredBooks,
-                    modifier = modifier.fillMaxWidth(),
-                    onDetailClick = {
-                        onDetailClick(it.idBuku.toString())
-                    }
-                )
-            }
-        }
-        is ListBukuUiState.Error -> onErr(retryAction, modifier = Modifier.fillMaxSize())
-    }
-}
-
-@Composable
 fun OnLoading(modifier: Modifier = Modifier){
     Image(
         painter = painterResource(id = R.drawable.loading_img),
@@ -183,73 +150,6 @@ fun onErr(
         Button(onClick = retryAction) {
             Text(stringResource(R.string.retry))
         }
-    }
-}
-
-@Composable
-fun MhsLayout(
-    buku: List<Buku>,
-    modifier: Modifier = Modifier,
-    onDetailClick: (Buku) -> Unit
-){
-    var deleteConfifrmationRequired by rememberSaveable { mutableStateOf(false) }
-    LazyColumn (
-        modifier = modifier,
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ){
-        items(buku){buku ->
-            BukuCard(
-                buku = buku,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onDetailClick(buku) }
-            )
-        }
-    }
-}
-
-
-
-@Composable
-fun BukuCard(
-    buku: Buku,
-    modifier: Modifier = Modifier
-) {
-
-    Card(
-        modifier = modifier,
-        shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Row (
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(
-                    text = buku.judul,
-                    style = MaterialTheme.typography.titleLarge)
-                Spacer(Modifier.weight(1f))
-                Text(
-                    text = buku.idBuku.toString(),
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier =  Modifier
-                )
-            }
-            Text(
-                text = buku.penulis,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = buku.status,
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-
     }
 }
 

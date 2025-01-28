@@ -16,9 +16,8 @@ import com.example.uas_pam.ui.Navigation.PengelolaHalaman
 fun PerpusApp(
     modifier: Modifier = Modifier
 ){
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier
     ){
         Surface(
             modifier = Modifier
