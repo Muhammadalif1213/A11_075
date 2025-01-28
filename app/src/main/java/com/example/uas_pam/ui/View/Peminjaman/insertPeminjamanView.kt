@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -85,37 +87,47 @@ fun EntryPeminjamanScreen(
             innerPadding ->
         Column (
             modifier = Modifier.padding(innerPadding)
+                .background(Color(0xFF2196F3))
         ){
-            Row (
-                modifier = modifier,
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.Top
+            Card(
+                modifier = Modifier.padding(16.dp),
+                elevation = CardDefaults.cardElevation(6.dp)
             ){
-                AnggotaTable(
-                    listAnggotaUiState = viewModelAnggota.anggotaUiState,
-                    modifier = Modifier.padding(16.dp).weight(2f),
-                )
-                BukuTable(
-                    listBukuUiState = viewModelBuku.bukuUiState,
-                    modifier = Modifier.padding(16.dp).weight(2f),
+                EntryBody(
+                    insertUiState = viewModel.uiState,
+                    onPeminjamanValueChange = viewModel::updateInsertPeminjamanState,
+                    onSaveClick = {
+                        coroutineScope.launch {
+                            viewModel.insertPeminjaman()
+                            onBackClick()
+                        }
+                    },
+                    anggotaOptions = viewModel.anggotaOptions,
+                    bukuOptions = viewModel.bukuOptions,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
                 )
             }
-
-            EntryBody(
-                insertUiState = viewModel.uiState,
-                onPeminjamanValueChange = viewModel::updateInsertPeminjamanState,
-                onSaveClick = {
-                    coroutineScope.launch {
-                        viewModel.insertPeminjaman()
-                        onBackClick()
-                    }
-                },
-                anggotaOptions = viewModel.anggotaOptions,
-                bukuOptions = viewModel.bukuOptions,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-            )
+            Card(
+                modifier = Modifier.padding(8.dp),
+                elevation = CardDefaults.cardElevation(6.dp)
+            ){
+                Row (
+                    modifier = modifier,
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.Top
+                ){
+                    AnggotaTable(
+                        listAnggotaUiState = viewModelAnggota.anggotaUiState,
+                        modifier = Modifier.padding(16.dp).weight(2f),
+                    )
+                    BukuTable(
+                        listBukuUiState = viewModelBuku.bukuUiState,
+                        modifier = Modifier.padding(16.dp).weight(2f),
+                    )
+                }
+            }
         }
     }
 }
@@ -204,18 +216,15 @@ fun FormInput(
             options = anggotaOptions.map { it.nama },
             label = "Nama Anggota",
             onValueChangedEvent = { selectedName ->
-                if (insertUiState.insertPeminjamanUiEvent.idAnggota.isEmpty()) { // Hanya jika belum ada ID
-                    val selectedAnggota = anggotaOptions.find { it.nama == selectedName }
-                    val updatedEventName =
-                        insertUiState.insertPeminjamanUiEvent.copy(
-                            namaAnggota = selectedName,
-                            idAnggota = selectedAnggota?.id?.toString() ?: "" // Atur sesuai ID sebenarnya dari data anggota
-                        )
-                    onPeminjamanValueChange(updatedEventName)
-                }
+                val selectedAnggota = anggotaOptions.find { it.nama == selectedName }
+                val updatedEventName =
+                    insertUiState.insertPeminjamanUiEvent.copy(
+                        namaAnggota = selectedName,
+                        idAnggota = selectedAnggota?.id?.toString() ?: "" // Atur sesuai ID sebenarnya dari data buku
+                    )
+                onPeminjamanValueChange(updatedEventName)
             },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = insertUiState.insertPeminjamanUiEvent.idAnggota.isEmpty() // Hanya aktif jika ID belum terisi
+            modifier = Modifier.fillMaxWidth()
         )
 
         Row(
@@ -317,44 +326,38 @@ fun DropDownTextField(
     options: List<String>,
     label: String,
     onValueChangedEvent: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true // Tambahkan parameter `enabled`
+    modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
-        expanded = expanded && enabled, // Hanya bisa diperluas jika enabled
-        onExpandedChange = { if (enabled) expanded = !expanded },
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
         modifier = modifier
     ) {
         OutlinedTextField(
-            readOnly = true, // Tetap readonly
+            readOnly = true,
             value = selectedValue,
             onValueChange = {},
             label = { Text(text = label) },
             trailingIcon = {
-                if (enabled) {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                }
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
             },
             colors = OutlinedTextFieldDefaults.colors(),
             modifier = Modifier
                 .menuAnchor()
-                .fillMaxWidth(),
-            enabled = enabled // Pastikan TextField mengikuti state enabled
+                .fillMaxWidth()
         )
 
-        if (enabled) {
-            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                options.forEach { option: String ->
-                    DropdownMenuItem(
-                        text = { Text(text = option) },
-                        onClick = {
-                            expanded = false
-                            onValueChangedEvent(option)
-                        }
-                    )
-                }
+        ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            options.forEach { option: String ->
+                DropdownMenuItem(
+                    text = { Text(text = option) },
+                    onClick = {
+                        expanded = false
+                        onValueChangedEvent(option)
+                    }
+                )
             }
         }
     }
