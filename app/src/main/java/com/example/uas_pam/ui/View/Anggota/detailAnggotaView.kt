@@ -1,5 +1,7 @@
 package com.example.uas_pam.ui.View.Anggota
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -29,11 +32,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.uas_pam.R
 import com.example.uas_pam.model.Anggota
 import com.example.uas_pam.ui.CustomWidget.CustomTopAppBar
 import com.example.uas_pam.ui.Navigation.DestinasiDetailAnggota
@@ -68,18 +73,27 @@ fun DetailAnggotaView(
         }
     ){
             innerPadding ->
-        StatusDetail(
-            detailUiState = detailViewModel.detailAnggotaUiState,
-            retryAction = {detailViewModel.getAnggotaById()},
-            modifier = Modifier.padding(innerPadding)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            onEditClick = onEditClick,
-            onDeleteClick = {
-                viewModel.deleteAnggota(it.idAnggota)
-                onBackClick()
-            }
-        )
+        Column (
+            modifier = Modifier
+                .background(Color(0xFF2196F3))
+                .padding(innerPadding)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            StatusDetail(
+                detailUiState = detailViewModel.detailAnggotaUiState,
+                retryAction = {detailViewModel.getAnggotaById()},
+                modifier = Modifier.padding(innerPadding)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                onEditClick = onEditClick,
+                onDeleteClick = {
+                    viewModel.deleteAnggota(it.idAnggota)
+                    onBackClick()
+                }
+            )
+        }
     }
 }
 
@@ -120,8 +134,14 @@ fun DetailAnggotaLayout(
 ) {
     var deleteConfifrmationRequired by rememberSaveable { mutableStateOf(false) }
     Column (
-        modifier = modifier.padding(16.dp)
+        modifier = modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ){
+        Image(
+            painter = painterResource(id = R.drawable.anggotaa),
+            contentDescription = "Icon Menu",
+            modifier = Modifier.size(150.dp)
+        )
         ItemDetailAnggota(
             anggota = anggota,
             modifier = Modifier.fillMaxWidth()
@@ -178,11 +198,7 @@ fun ItemDetailAnggota(
     Card(
         modifier = modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(2.dp),
-        shape = MaterialTheme.shapes.medium,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            contentColor = MaterialTheme.colorScheme.onSurface
-        )
+        shape = MaterialTheme.shapes.medium
     ) {
         Column (
             modifier = Modifier.padding(16.dp)
@@ -222,7 +238,7 @@ fun ComponentDetailAnggota(
             text = "$judul: ",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Gray
+            color = Color.Black
         )
         Text(
             text = isinya,

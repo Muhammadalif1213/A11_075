@@ -1,12 +1,19 @@
 package com.example.uas_pam.ui.View.Anggota
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -16,10 +23,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.uas_pam.R
 import com.example.uas_pam.ui.CustomWidget.CustomTopAppBar
 import com.example.uas_pam.ui.Navigation.DestinasiEntryAnggota
 import com.example.uas_pam.ui.viewModel.Anggota.InsertAnggotaUiEvent
@@ -49,20 +60,57 @@ fun EntryAnggotaScreen(
         }
     ){
             innerPadding ->
-        EntryBody(
-            insertUiState = viewModel.uiState,
-            onAnggotaValueChange = viewModel::updateInsertAnggotaState,
-            onSaveClick = {
-                coroutineScope.launch {
-                    viewModel.insertAnggota()
-                    navigateBack()
-                }
-            },
+        Column (
             modifier = Modifier
                 .padding(innerPadding)
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-        )
+                .background(Color(0xFF2196F3))
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ){
+            Image(
+                painter = painterResource(id = R.drawable.anggotaa),
+                contentDescription = "Icon Menu",
+                modifier = Modifier.size(150.dp)
+            )
+            Card(
+                modifier = modifier
+                    .background(Color(0xFF2196F3))
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(6.dp)
+            ) {
+                Column(
+                    modifier = modifier.padding(8.dp).fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ){
+                    Text(text = "Silahkan Input Data Diri Anda",
+                        style = MaterialTheme.typography.titleLarge)
+                }
+            }
+            Card(
+                modifier = modifier
+                    .background(Color(0xFF2196F3))
+                    .padding(8.dp),
+                elevation = CardDefaults.cardElevation(6.dp)
+            ) {
+                EntryBody(
+                    insertUiState = viewModel.uiState,
+                    onAnggotaValueChange = viewModel::updateInsertAnggotaState,
+                    onSaveClick = {
+                        coroutineScope.launch {
+                            viewModel.insertAnggota()
+                            navigateBack()
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+            }
+        }
+
     }
 }
 
@@ -75,7 +123,8 @@ fun EntryBody(
 ){
     Column (
         verticalArrangement = Arrangement.spacedBy(18.dp),
-        modifier = modifier.padding(12.dp)
+        modifier = modifier.padding(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     )  {
         FormInput(
             insertUiEvent = insertUiState.insertAnggotaUiEvent,
