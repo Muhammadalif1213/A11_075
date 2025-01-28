@@ -66,7 +66,8 @@ object PenyediaViewModel{
         }
         initializer {
             ListPeminjamanViewModel(
-                perpusApp().container.peminjamanRepository)
+                perpusApp().container.peminjamanRepository,
+                perpusApp().container.pengembalianRepository)
         }
         initializer {
             InsertAnggotaViewModel(perpusApp().container.anggotaRepository)
