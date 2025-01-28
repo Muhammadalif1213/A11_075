@@ -29,13 +29,19 @@ class InsertPengembalianViewModel(
     var errorMessage by mutableStateOf<String?>(null)
         private set
 
-
     fun loadBukuOptions() {
         viewModelScope.launch {
             isLoading = true
             try {
-                // Muat daftar buku dan anggota dari repository
-                bukuOptions = pm.getPeminjaman().map { BukuOptionPengembalian(it.idPeminjaman, it.judulBuku) }
+                // Muat daftar buku dari repository
+                val peminjamanList = pm.getPeminjaman()
+
+                // Filter peminjaman berdasarkan status "Dipinjam" dan hanya tampilkan judul buku unik
+                bukuOptions = peminjamanList
+                    .filter { it.status == "Dipinjam" } // Filter status "Dipinjam"
+                    .map { BukuOptionPengembalian(it.idPeminjaman, it.judulBuku) }
+                    .distinctBy { it.judul } // Menjamin hanya satu judul buku yang sama yang muncul
+
                 errorMessage = null
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -50,8 +56,6 @@ class InsertPengembalianViewModel(
         uiState = InsertPengembalianUiState(insertUiEvent)
     }
 
-
-
     suspend fun insertPengembalian() {
         try {
             pk.insertPengembalian(uiState.insertPengembalianUiEvent.toPengembalian())
@@ -60,6 +64,7 @@ class InsertPengembalianViewModel(
         }
     }
 }
+
 
 data class BukuOptionPengembalian(val idPeminjaman: Int, val judul: String)
 
